@@ -1,6 +1,6 @@
 const library = JSON.parse(localStorage.getItem('library')) || [];
 
-// Show movies
+// Show books
 
 var elBooksList = document.querySelector('.books');
 var tempBook = document.querySelector('#tempBook').content;
@@ -31,11 +31,15 @@ function showBooks(books, searchWord) {
     newBook.querySelector('.book__more-link').href = book.link;
     newBook.querySelector('.book__add-library').dataset.uniqueId = book.uniqueId;
 
-    // if (bookmarks.findIndex(bookmark => bookmark.imdbId === book.imdbId) >= 0) {
-    //   newBook.querySelector('.book__bookmark').classList.add('book__bookmark--added');
-    //   newBook.querySelector('.book__bookmark').children[0].src = './img/icon-bookmark-added.svg';
-    //   newBook.querySelector('.book__bookmark').children[1].textContent = 'Added to bookmark';
-    // }
+    if (library.find(libraryItem => newBook.querySelector('.book__add-library').dataset.uniqueId === libraryItem.uniqueId)) {
+      newBook.querySelector('.book__add-library').classList.add('book__add-library--added');
+      newBook.querySelector('.book__add-library').children[0].src = './img/icon-bookmark.svg';
+      newBook.querySelector('.book__add-library').children[1].textContent = 'Added to library';
+    } else {
+      newBook.querySelector('.book__add-library').classList.remove('book__add-library--added');
+      newBook.querySelector('.book__add-library').children[0].src = './img/icon-bookmark-add.svg';
+      newBook.querySelector('.book__add-library').children[1].textContent = 'Add to library';
+    }
 
     booksFragment.appendChild(newBook);
   }
@@ -45,64 +49,55 @@ function showBooks(books, searchWord) {
 
 // Filters
 
-let filteredMovies = [];
-// const elFilters = document.querySelector('.filters');
-// const elFiltersQuery = elFilters.q;
-// const elFiltersCategories = elFilters.categories;
-// const elFiltersYearMin = elFilters.from_year;
-// const elFiltersYearMax = elFilters.to_year;
-// const elFiltersRating = elFilters.rating;
-// const elFiltersFilter = elFilters.filter;
+let filteredBooks = [];
+const elFilters = document.querySelector('.filters');
+const elFiltersQuery = elFilters.q;
+const elFiltersYearMin = elFilters.from_year;
+const elFiltersYearMax = elFilters.to_year;
+const elFiltersFilter = elFilters.filter;
 
-// function filterMovies(arr, option) {
-//   if (option === 'a-z') {
-//     arr.sort((a, b) => {
-//       if (a.title > b.title) return 1;
-//       if (a.title < b.title) return -1;
-//       return 0;
-//     })
-//   }
-//   else if (option === 'z-a') {
-//     arr.sort((a, b) => {
-//       if (a.title > b.title) return -1;
-//       if (a.title < b.title) return 1;
-//       return 0;
-//     })
-//   }
-//   else if (option === 'rating') {
-//     arr.sort((a, b) => {
-//       return b.imdbRating - a.imdbRating;
-//     })
-//   }
-//   else if (option === 'year') {
-//     arr.sort((a, b) => {
-//       return b.year - a.year;
-//     })
-//   }
-// }
+function filterBooks(arr, option) {
+  if (option === 'a-z') {
+    arr.sort((a, b) => {
+      if (a.title > b.title) return 1;
+      if (a.title < b.title) return -1;
+      return 0;
+    })
+  }
+  else if (option === 'z-a') {
+    arr.sort((a, b) => {
+      if (a.title > b.title) return -1;
+      if (a.title < b.title) return 1;
+      return 0;
+    })
+  }
+  else if (option === 'year') {
+    arr.sort((a, b) => {
+      return b.year - a.year;
+    })
+  }
+}
 
-// elFilters.addEventListener('submit', e => {
-//   e.preventDefault();
+elFilters.addEventListener('submit', e => {
+  e.preventDefault();
 
-//   let regexSearch = new RegExp(elFiltersQuery.value.trim(), 'gi');
-//   filteredMovies = movies.filter(movie => {
-//     return (
-//       (movie.title.match(regexSearch)) &&
-//       (elFiltersCategories.value.includes('all') || movie.categories.includes(elFiltersCategories.value)) &&
-//       (movie.year >= (Number(elFiltersYearMin.value) || 1900) && movie.year <= (Number(elFiltersYearMax.value) || 2021)) &&
-//       (movie.imdbRating >= Number(elFiltersRating.value))
-//     );
-//   });
+  let regexSearch = new RegExp(elFiltersQuery.value.trim(), 'gi');
+  filteredBooks = books.filter(book => {
+    return (
+      (book.title.match(regexSearch)) &&
+      (book.year >= (Number(elFiltersYearMin.value) || 1000) && book.year <= (Number(elFiltersYearMax.value) || 2021))
+    );
+  });
 
-//   if (filteredMovies.length > 0) {
-//     filterMovies(filteredMovies, elFiltersFilter.value);
+  if (filteredBooks.length > 0) {
+    filterBooks(filteredBooks, elFiltersFilter.value);
 
-//     buildPagination(CURRENT_PAGE);
-//     buildPage(CURRENT_PAGE);
-//   }
-//   else
-//     elBooksList.innerHTML = '<p class="text-center fw-bold h2 mb-0">No movie found</p>'
-// })
+    buildPagination(CURRENT_PAGE);
+    buildPage(CURRENT_PAGE);
+  }
+  else
+    elBooksList.innerHTML = '<p class="text-center fw-bold h2 mb-0">No book found</p>'
+})
 
 // Library
 
@@ -115,7 +110,7 @@ elBooksList.addEventListener('click', e => {
 
       let libraryItemIndex = library.findIndex(libraryItem => e.target.dataset.uniqueId === libraryItem.uniqueId);
       library.splice(libraryItemIndex, 1);
-    } 
+    }
     else {
       e.target.classList.add('book__add-library--added');
       e.target.children[0].src = './img/icon-bookmark-added.svg';
@@ -150,14 +145,17 @@ function showLibrary() {
 elLibraryModal.addEventListener('show.bs.modal', showLibrary);
 
 elLibraryModal.addEventListener('click', (e) => {
+  debugger;
   if (e.target.matches('.library-item__remove')) {
     const libraryItemIndex = library.findIndex(libraryItem => libraryItem.uniqueId === e.target.dataset.uniqueId);
     const removedLibraryItem = library.splice(libraryItemIndex, 1)[0];
 
-    const elBookAddLibrary = elBooksList.querySelector(`.book__add-library[data-unique-id="${removedLibraryItem.uniqueId}"]`);
-    elBookAddLibrary.classList.remove('book__add-library--added');
-    elBookAddLibrary.children[0].src = './img/icon-bookmark-add.svg';
-    elBookAddLibrary.children[1].textContent = 'Add to library';
+    const elBookAddLibrary = elBooksList.querySelector(`.book__add-library[data-unique-id=${removedLibraryItem.uniqueId}]`);
+    if (elBookAddLibrary) {
+      elBookAddLibrary.classList.remove('book__add-library--added');
+      elBookAddLibrary.children[0].src = './img/icon-bookmark-add.svg';
+      elBookAddLibrary.children[1].textContent = 'Add to library';
+    }
 
     localStorage.setItem('library', JSON.stringify(library));
     showLibrary();
@@ -172,13 +170,6 @@ const elsPaginationLinks = elPagination.querySelectorAll('.pagination__link');
 const elPaginationControlPrev = elPagination.querySelector('.pagination__control--prev');
 const elPaginationControlNext = elPagination.querySelector('.pagination__control--next');
 
-// let TOTAL_ITEMS = elBooksList.children.length;
-// const ITEMS_PER_PAGE = 10;
-// let CURRENT_PAGE = 1;
-// const NEIGHBOUR_PAGES = 2;
-// let TOTAL_PAGES = Math.ceil(TOTAL_ITEMS / ITEMS_PER_PAGE);
-// let isPaginationValid = (CURRENT_PAGE + NEIGHBOUR_PAGES) - (CURRENT_PAGE - NEIGHBOUR_PAGES) === NEIGHBOUR_PAGES * 2 && CURRENT_PAGE - NEIGHBOUR_PAGES >= 1 && CURRENT_PAGE + NEIGHBOUR_PAGES <= TOTAL_PAGES;
-
 function buildPagination(clickedPage) {
   isPaginationValid = (clickedPage + NEIGHBOUR_PAGES) - (clickedPage - NEIGHBOUR_PAGES) === NEIGHBOUR_PAGES * 2 && clickedPage - NEIGHBOUR_PAGES >= 1 && clickedPage + NEIGHBOUR_PAGES <= TOTAL_PAGES;
 
@@ -192,6 +183,15 @@ function buildPagination(clickedPage) {
 function buildPage(currPage) {
   if (currPage < 1 || currPage > TOTAL_PAGES) return;
 
+  if (currPage === 1)
+    elPaginationControlPrev.parentElement.classList.add('disabled');
+  else
+    elPaginationControlPrev.parentElement.classList.remove('disabled');
+  if (currPage === TOTAL_PAGES)
+    elPaginationControlNext.parentElement.classList.add('disabled');
+  else
+    elPaginationControlNext.parentElement.classList.remove('disabled');
+
   for (let link of elsPaginationLinks) {
     if (+link.textContent === currPage)
       link.parentElement.classList.add('active');
@@ -202,8 +202,8 @@ function buildPage(currPage) {
   const trimStart = (currPage - 1) * ITEMS_PER_PAGE;
   const trimEnd = trimStart + ITEMS_PER_PAGE;
 
-  if (filteredMovies.length > 0) {
-    TOTAL_ITEMS = filteredMovies.length;
+  if (filteredBooks.length > 0) {
+    TOTAL_ITEMS = filteredBooks.length;
     TOTAL_PAGES = Math.ceil(TOTAL_ITEMS / ITEMS_PER_PAGE)
     if (TOTAL_PAGES < 5) {
       for (let i = 1; i <= 5; i++) {
