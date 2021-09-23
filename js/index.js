@@ -56,6 +56,8 @@ const elFiltersQuery = elFilters.q;
 const elFiltersYearMin = elFilters.from_year;
 const elFiltersYearMax = elFilters.to_year;
 const elFiltersFilter = elFilters.filter;
+const elFiltersLanguage = elFilters.language_filter;
+const elFiltersCountry = elFilters.country_filter;
 
 function filterBooks(arr, option) {
   if (option === 'a-z') {
@@ -65,16 +67,14 @@ function filterBooks(arr, option) {
       return 0;
     })
   }
-  else if (option === 'z-a') {
-    arr.sort((a, b) => {
-      if (a.title > b.title) return -1;
-      if (a.title < b.title) return 1;
-      return 0;
-    })
-  }
   else if (option === 'year') {
     arr.sort((a, b) => {
-      return b.year - a.year;
+      return a.year - b.year;
+    })
+  } 
+  else if (option === 'pages_count') {
+    arr.sort((a, b) => {
+      return a.pages - b.pages;
     })
   }
 }
@@ -86,12 +86,14 @@ elFilters.addEventListener('submit', e => {
   filteredBooks = books.filter(book => {
     return (
       (book.title.match(regexSearch)) &&
-      (book.year >= (Number(elFiltersYearMin.value) || 1000) && book.year <= (Number(elFiltersYearMax.value) || 2021))
+      (book.year >= (Number(elFiltersYearMin.value) ?? -1700) && book.year <= (Number(elFiltersYearMax.value) ?? 2021)) &&
+      (book.language === elFiltersLanguage.value || elFiltersLanguage.value === 'All') &&
+      (book.country === elFiltersCountry.value || elFiltersCountry.value === 'All')
     );
   });
 
   if (filteredBooks.length > 0) {
-    filterBooks(filteredBooks, elFiltersFilter.value);
+    filterBooks(filteredBooks, elFiltersFilter.value, elFiltersLanguage.value, elFiltersCountry.value);
 
     buildPagination(CURRENT_PAGE);
     buildPage(CURRENT_PAGE);
