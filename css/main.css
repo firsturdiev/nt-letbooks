@@ -14,14 +14,14 @@
   background-position: center;
 }
 
-.book__info-item::before {
+.book__info-language::before {
   background-image: url('../img/icon-globe.svg');
 }
 
-.book__info-item::before {
+.book__info-country::before {
   background-image: url('../img/icon-place.svg');
 }
 
-.book__info-item::before {
+.book__info-year::before {
   background-image: url('../img/icon-calendar.svg');
 }
