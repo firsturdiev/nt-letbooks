@@ -2,13 +2,13 @@ const library = JSON.parse(localStorage.getItem('library')) || [];
 
 // Show books
 
-var elBooksList = document.querySelector('.books');
-var tempBook = document.querySelector('#tempBook').content;
-var booksFragment = document.createDocumentFragment();
-var books = booksData.slice();
+let elBooksList = document.querySelector('.books');
+let tempBook = document.querySelector('#tempBook').content;
+let booksFragment = document.createDocumentFragment();
+let books = booksData.slice();
 
 let TOTAL_ITEMS = books.length;
-let ITEMS_PER_PAGE = 10;
+let ITEMS_PER_PAGE = 9;
 let CURRENT_PAGE = 1;
 let NEIGHBOUR_PAGES = 2;
 let TOTAL_PAGES = Math.ceil(TOTAL_ITEMS / ITEMS_PER_PAGE);
@@ -25,6 +25,7 @@ function showBooks(books, searchWord) {
       newBook.querySelector('.book__title').innerHTML = book.title.replace(searchWord, `<mark class="p-0 bg-warning">${searchWord.source}</mark>`);
     else
       newBook.querySelector('.book__title').textContent = book.title;
+    newBook.querySelector('.book__author').textContent = book.author;
     newBook.querySelector('.book__info-year').textContent = book.year;
     newBook.querySelector('.book__info-language').textContent = book.language;
     newBook.querySelector('.book__info-country').textContent = book.country;
