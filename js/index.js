@@ -81,7 +81,6 @@ function filterBooks(arr, option) {
 
 elFilters.addEventListener('submit', e => {
   e.preventDefault();
-  debugger;
 
   let regexSearch = new RegExp(elFiltersQuery.value.trim(), 'gi');
   filteredBooks = books.filter(book => {
@@ -92,17 +91,18 @@ elFilters.addEventListener('submit', e => {
       (book.country === elFiltersCountry.value || elFiltersCountry.value === 'All')
     );
   });
-
   if (filteredBooks.length > 0) {
     filterBooks(filteredBooks, elFiltersFilter.value, elFiltersLanguage.value, elFiltersCountry.value);
-
+    
     buildPagination(CURRENT_PAGE);
     buildPage(CURRENT_PAGE);
-    elPagination.style.display = 'flex';
+    debugger
+    elPagination.classList.remove('d-none');
   }
-  else
+  else {
     elBooksList.innerHTML = '<p class="text-center fw-bold h2 mb-0">No book found</p>';
-    elPagination.style.display = 'none';
+    elPagination.classList.add('d-none')
+  }
 })
 
 // Library
@@ -218,7 +218,6 @@ function buildPage(currPage) {
         }
       }
     } else {
-      debugger;
       for (let i = 0; i <= 4; i++) {
         elsPaginationLinks[i].style.display = 'initial';
       }
