@@ -81,12 +81,13 @@ function filterBooks(arr, option) {
 
 elFilters.addEventListener('submit', e => {
   e.preventDefault();
+  debugger;
 
   let regexSearch = new RegExp(elFiltersQuery.value.trim(), 'gi');
   filteredBooks = books.filter(book => {
     return (
       (book.title.match(regexSearch)) &&
-      (book.year >= (Number(elFiltersYearMin.value) ?? -1700) && book.year <= (Number(elFiltersYearMax.value) ?? 2021)) &&
+      (book.year >= (Number(elFiltersYearMin.value) || -1700) && book.year <= (Number(elFiltersYearMax.value) || 2021)) &&
       (book.language === elFiltersLanguage.value || elFiltersLanguage.value === 'All') &&
       (book.country === elFiltersCountry.value || elFiltersCountry.value === 'All')
     );
@@ -97,9 +98,11 @@ elFilters.addEventListener('submit', e => {
 
     buildPagination(CURRENT_PAGE);
     buildPage(CURRENT_PAGE);
+    elPagination.style.display = 'flex';
   }
   else
-    elBooksList.innerHTML = '<p class="text-center fw-bold h2 mb-0">No book found</p>'
+    elBooksList.innerHTML = '<p class="text-center fw-bold h2 mb-0">No book found</p>';
+    elPagination.style.display = 'none';
 })
 
 // Library
