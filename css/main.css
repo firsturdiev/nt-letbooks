@@ -1,5 +1,6 @@
 body {
-  background-image: url('../img/bg-body.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)),
+    url("../img/bg-body.jpg");
 }
 
 /* BOOK */
@@ -9,7 +10,7 @@ body {
 }
 
 .book__info-item::before {
-  content: '';
+  content: "";
   width: 24px;
   height: 24px;
   margin-right: 5px;
@@ -19,13 +20,13 @@ body {
 }
 
 .book__info-language::before {
-  background-image: url('../img/icon-globe.svg');
+  background-image: url("../img/icon-globe.svg");
 }
 
 .book__info-country::before {
-  background-image: url('../img/icon-place.svg');
+  background-image: url("../img/icon-place.svg");
 }
 
 .book__info-year::before {
-  background-image: url('../img/icon-calendar.svg');
+  background-image: url("../img/icon-calendar.svg");
 }
