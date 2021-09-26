@@ -29,12 +29,13 @@ function showBooks(books, searchWord) {
     newBook.querySelector('.book__info-year').textContent = book.year;
     newBook.querySelector('.book__info-language').textContent = book.language;
     newBook.querySelector('.book__info-country').textContent = book.country;
+    newBook.querySelector('.book__info-pages').textContent = book.pages;
     newBook.querySelector('.book__more-link').href = book.link;
     newBook.querySelector('.book__add-library').dataset.uniqueId = book.uniqueId;
 
     if (library.find(libraryItem => newBook.querySelector('.book__add-library').dataset.uniqueId === libraryItem.uniqueId)) {
       newBook.querySelector('.book__add-library').classList.add('book__add-library--added');
-      newBook.querySelector('.book__add-library').children[0].src = './img/icon-bookmark.svg';
+      newBook.querySelector('.book__add-library').children[0].src = './img/icon-bookmark-added.svg';
       newBook.querySelector('.book__add-library').children[1].textContent = 'Added to library';
     } else {
       newBook.querySelector('.book__add-library').classList.remove('book__add-library--added');

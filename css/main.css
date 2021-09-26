@@ -30,3 +30,8 @@ body {
 .book__info-year::before {
   background-image: url("../img/icon-calendar.svg");
 }
+
+
+.book__info-pages::before {
+  background-image: url("../img/icon-pages.svg");
+}
